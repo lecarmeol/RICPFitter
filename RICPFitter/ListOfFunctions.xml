@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Functions>
+  <Function name="gaussian">
+    <Parameter description="amplitude" defaultValue ="1">A</Parameter>
+    <Parameter description="center" defaultValue ="0">x0</Parameter>
+    <Parameter description="fwhm" defaultValue ="1">w</Parameter>
+    <Parameter description="offset" defaultValue ="0">y0</Parameter>
+    <Variable>x</Variable>
+    <Equation>A * Math.Exp(-(x - x0) * (x - x0) / (2 * w * w)) + y0</Equation>
+  </Function>
+  <Function name="lorentzian">
+    <Parameter description="amplitude" defaultValue ="1">A</Parameter>
+    <Parameter description="center" defaultValue ="0">x0</Parameter>
+    <Parameter description="fwhm" defaultValue ="1">w</Parameter>
+    <Parameter description="offset" defaultValue ="0">y0</Parameter>
+    <Variable>x</Variable>
+    <Equation>A / (1 + Math.Pow(2 * (x - x0) / w, 2)) + y0</Equation>
+  </Function>
+  <Function name="exponential decay">
+    <Parameter description="amplitude" defaultValue ="1">A</Parameter>
+    <Parameter description="lifetime" defaultValue ="1" unit="s">τ</Parameter>
+    <Parameter description="offset" defaultValue ="0">y0</Parameter>
+    <Variable>x</Variable>
+    <Equation>A * Math.Exp(- t / τ) + y0</Equation>
+  </Function>
+</Functions>

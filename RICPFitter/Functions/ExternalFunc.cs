@@ -86,6 +86,15 @@ namespace RICPFitter.Functions
             return result;
         }
 
+        /// <summary>
+        /// Generate a function (delegate) from an equation as string<br/>
+        /// Equation is transformed into function via runtime C# scripting
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="variable"></param>
+        /// <param name="equation"></param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="NullReferenceException"></exception>
         private void GenerateFunction(List<FuncParameter> parameters, string variable, string equation)
         {
             string code = "return new Func<";
@@ -113,64 +122,124 @@ namespace RICPFitter.Functions
         {
             base.DoFit(x, y, initialGuess);
 
-            string code = "var fittedParam = Fit.Curve(x, y,(Func<";
-            int nbOfParam = Parameters.Count;
-            for (int i = 0; i < nbOfParam; i++)
+            List<object> rawFitParam = [];
+            switch (function)
             {
-                code += "double, ";
+                case Func<double, double, double> func1Param:
+                    rawFitParam.Add(Fit.Curve(x, y, func1Param, initialGuess[0].Value, FitTolerance, FitMaxIteration));
+                    break;
+                case Func<double, double, double, double> func2Param:
+                    var fitParam = Fit.Curve(x, y, 
+                        func2Param, 
+                        initialGuess[0].Value, 
+                        initialGuess[1].Value, 
+                        FitTolerance, 
+                        FitMaxIteration);
+                    rawFitParam = TupleToList(fitParam);
+                    break;
+                case Func<double, double, double, double, double> func3Param:
+                    var fitParamB = Fit.Curve(x, y, 
+                        func3Param, 
+                        initialGuess[0].Value, 
+                        initialGuess[1].Value, 
+                        initialGuess[2].Value, 
+                        FitTolerance, 
+                        FitMaxIteration);
+                    rawFitParam = TupleToList(fitParamB);
+                    break;
+                case Func<double, double, double, double, double, double> func4Param:
+                    var fitParamC = Fit.Curve(x, y,
+                        func4Param, 
+                        initialGuess[0].Value, 
+                        initialGuess[1].Value,
+                        initialGuess[2].Value,
+                        initialGuess[3].Value,
+                        FitTolerance, 
+                        FitMaxIteration);
+                    rawFitParam = TupleToList(fitParamC);
+                    break;
+                case Func<double, double, double, double, double, double, double> func5Param:
+                    var fitParamD = Fit.Curve(x, y,
+                        func5Param,
+                        initialGuess[0].Value,
+                        initialGuess[1].Value,
+                        initialGuess[2].Value,
+                        initialGuess[3].Value,
+                        initialGuess[4].Value,
+                        FitTolerance,
+                        FitMaxIteration);
+                    rawFitParam = TupleToList(fitParamD);
+                    break;
             }
-            code += "double>)function,";
-            for (int i = 0; i < nbOfParam; i++)
+            for (int i = 0; i < rawFitParam.Count; i++)
             {
-                double value = initialGuess[i].Value;
-                code += value.ToString() + ",";
-            }
-            code += $"{FitTolerance}, {FitMaxIteration});";
-            code += "return (ITuple)fittedParam;";
-
-            var scriptOptions = ScriptOptions.Default
-                .WithReferences(typeof(double).Assembly)
-                .WithImports(["System", "MathNet.Numerics"]);
-            var script = CSharpScript.Create<ITuple>(code, scriptOptions, globalsType: typeof(ExternalFunc));
-            var result = script.RunAsync(this).Result.ReturnValue;
-            for (int i = 0; i < result.Length; i++)
-            {
-                Parameters[i].Value = (double)result[i];
+                Parameters[i].Value = (double)rawFitParam[i];
             }
 
             CoeffOfDetermination = GoodnessOfFit.CoefficientOfDetermination(y, GetY(x));
             return CoeffOfDetermination;
         }
 
+        private static List<object> TupleToList(ITuple tuple)
+        {
+            return Enumerable.Range(0, tuple.Length)
+                             .Select(i => tuple[i])
+                             .ToList();
+        }
+
+        public override (double[], double[]) GenerateData(double start, double end, int nbOfPoints = 41)
+        {
+            (double[] xData, _) = base.GenerateData(start, end, nbOfPoints);
+            return (xData, GetY(xData));
+        }
+
+        public override double[] GenerateData(double[] x)
+        {
+            base.GenerateData(x);
+            return GetY(x);
+        }
+
         private double[] GetY(double[] xData)
         {
             double[] yData = new double[xData.Length];
 
-            // Base code
-            int nbOfParam = Parameters.Count;
-            string paramAsStr = "";
-            for (int i = 0; i < nbOfParam; i++)
-            {
-                paramAsStr += Parameters[i].Value.ToString() + ",";
-            }
-
-            // Scripting options
-            string baseCode = "return function(" + paramAsStr;
-            var scriptOptions = ScriptOptions.Default
-                .WithReferences(typeof(double).Assembly)
-                .WithImports("System");
-
-            // Run code to get yData
             for (int i = 0; i < xData.Length; i++)
             {
-                string code = baseCode + xData[i].ToString() + ");";
-                var script = CSharpScript.Create<double>(code, scriptOptions, globalsType: typeof(ExternalFunc));
-                yData[i] = script.RunAsync(this).Result.ReturnValue;
+                List<double> args = Parameters.Select(p => p.Value).ToList();
+                args.Add(xData[i]);
+                yData[i] = InvokeFunc(function, args);
             }
 
             if (Randomness) AddRandomness(ref yData);
 
             return yData;
+        }
+
+        private static double InvokeFunc(object funcObj, List<double> args)
+        {
+            // Check if funcObj is a Func delegate
+            if (funcObj is not Delegate func)
+            {
+                throw new ArgumentException("Argument is not a Func delegate.");
+            }
+
+            // Get the number of parameters expected by the Func delegate
+            int numParameters = func.Method.GetParameters().Length;
+
+            // Check if the number of arguments matches the expected number of parameters
+            if (args.Count != numParameters)
+            {
+                throw new ArgumentException($"Number of arguments ({args.Count}) does not match the expected number of parameters ({numParameters}) for the provided Func.");
+            }
+
+            // Convert the list of arguments to an array of object
+            object[] parameters = args.Cast<object>().ToArray();
+
+            // Invoke the Func delegate with the arguments
+            object result = func.DynamicInvoke(parameters);
+
+            // Convert the result to double (assuming the result is of type double)
+            return Convert.ToDouble(result);
         }
     }
 }

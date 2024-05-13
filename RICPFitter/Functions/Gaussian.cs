@@ -95,7 +95,7 @@ namespace RICPFitter.Functions
                                 xData[i]);
 
             if (Randomness) AddRandomness(ref yData);
-
+            
             return yData;
         }
     }

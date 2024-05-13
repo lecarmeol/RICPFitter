@@ -65,7 +65,7 @@ namespace RICPFitter.Functions
         public virtual (double[], double[]) GenerateData(double start, double end, int nbOfPoints = 41)
         {
             if (start > end) throw new ArgumentException("Start value must be higher than end value");
-            if (nbOfPoints < 1) throw new ArgumentOutOfRangeException("The number of points must be > 0");
+            ArgumentOutOfRangeException.ThrowIfLessThan(nbOfPoints, 1);
 
             double[] xData = new double[nbOfPoints];
             double stepSize = (end - start) / (nbOfPoints - 1);
@@ -87,7 +87,7 @@ namespace RICPFitter.Functions
         /// <param name="yData"></param>
         protected void AddRandomness(ref double[] yData)
         {
-            Random random = new Random();
+            Random random = new();
             double yMax = yData.Max();
             for (int i = 0; i < yData.Length; i++)
             {

@@ -21,9 +21,11 @@ namespace RICPFitter.Functions
 
         public static ExternalFunc FromXml(XmlNode node)
         {
-            ExternalFunc result = new ExternalFunc();
-            result.Name = node.Attributes["name"].Value;
-            List<FuncParameter> parameters = new List<FuncParameter>();
+            ExternalFunc result = new()
+            {
+                Name = node.Attributes["name"].Value
+            };
+            List<FuncParameter> parameters = [];
             string variableName = "";
             bool singleVariableFound = false;
             string equation = "";
@@ -35,7 +37,7 @@ namespace RICPFitter.Functions
                     double initValue = Double.Parse(subnode.Attributes["defaultValue"].InnerText,
                         System.Globalization.NumberStyles.Any,
                         System.Globalization.CultureInfo.InvariantCulture);
-                    FuncParameter parameter = new FuncParameter()
+                    FuncParameter parameter = new()
                     {
                         Name = subnode.InnerText,
                         Value = initValue,
@@ -128,7 +130,7 @@ namespace RICPFitter.Functions
 
             var scriptOptions = ScriptOptions.Default
                 .WithReferences(typeof(double).Assembly)
-                .WithImports(new string[2] {"System", "MathNet.Numerics" });
+                .WithImports(["System", "MathNet.Numerics"]);
             var script = CSharpScript.Create<ITuple>(code, scriptOptions, globalsType: typeof(ExternalFunc));
             var result = script.RunAsync(this).Result.ReturnValue;
             for (int i = 0; i < result.Length; i++)

@@ -19,21 +19,21 @@ namespace RICPFitter.Functions
             });
             Name = "Exponantial decay";
             Description = "A * Exp(- t / τ) + y0";
-            Parameters = new List<FuncParameter>();
-            FuncParameter amplitude = new FuncParameter()
+            Parameters = [];
+            FuncParameter amplitude = new()
             {
                 Name = "A",
                 Value = 1,
                 Description = "amplitude"
             };
-            FuncParameter lifetime = new FuncParameter()
+            FuncParameter lifetime = new()
             {
                 Name = "τ",
                 Value = 1,
                 Description = "lifetime",
                 Unit = "s"
             };
-            FuncParameter offset = new FuncParameter()
+            FuncParameter offset = new()
             {
                 Name = "y0",
                 Value = 0,

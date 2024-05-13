@@ -23,26 +23,26 @@ namespace RICPFitter.Functions
             });
             Name = "Gaussian";
             Description = "A * Exp(-(x - x0)² / (2 * w²)) + y0";
-            Parameters = new List<FuncParameter>();
-            FuncParameter amplitude = new FuncParameter()
+            Parameters = [];
+            FuncParameter amplitude = new()
             {
                 Name = "A",
                 Value = 1,
                 Description = "Amplitude"
             };
-            FuncParameter center = new FuncParameter()
+            FuncParameter center = new()
             {
                 Name = "x0",
                 Value = 0,
                 Description = "Center"
             };
-            FuncParameter fwhm = new FuncParameter()
+            FuncParameter fwhm = new()
             {
                 Name = "w",
                 Value = 1,
                 Description = "FWHM"
             };
-            FuncParameter offset = new FuncParameter()
+            FuncParameter offset = new()
             {
                 Name = "y0",
                 Value = 0,

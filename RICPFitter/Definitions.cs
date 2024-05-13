@@ -15,7 +15,7 @@ namespace RICPFitter
         /// <summary>
         /// List of available IMathFunction class names
         /// </summary>
-        public static List<string> FunctionNames => new List<string>() { "Gaussian", "Lorentzian", "ExponentialDecay" };
+        public static List<string> FunctionNames => ["Gaussian", "Lorentzian", "ExponentialDecay"];
 
         /// <summary>
         /// List of available IMathFunction class types
@@ -27,7 +27,7 @@ namespace RICPFitter
                 string namespaceAsStr = typeof(Gaussian).Namespace;
                 string prefix = namespaceAsStr + ".";
                 string suffix = "," + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-                List<string> result = new List<string>();
+                List<string> result = [];
                 foreach(string str in FunctionNames)
                 {
                     result.Add(prefix + str + suffix);

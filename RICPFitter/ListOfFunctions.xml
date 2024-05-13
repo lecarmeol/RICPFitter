@@ -20,7 +20,7 @@
     <Parameter description="amplitude" defaultValue ="1">A</Parameter>
     <Parameter description="lifetime" defaultValue ="1" unit="s">τ</Parameter>
     <Parameter description="offset" defaultValue ="0">y0</Parameter>
-    <Variable>x</Variable>
+    <Variable>t</Variable>
     <Equation>A * Math.Exp(- t / τ) + y0</Equation>
   </Function>
 </Functions>

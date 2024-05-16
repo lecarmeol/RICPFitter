@@ -27,6 +27,19 @@ namespace RICPFitter.Functions
         int FitMaxIteration { get; set; }
 
         /// <summary>
+        /// Initial guess values
+        /// </summary>
+        List<FuncParameter> GuessParameters { get; }
+
+        /// <summary>
+        /// Perform the fit
+        /// </summary>
+        /// <param name="x">x array</param>
+        /// <param name="y">y array</param>
+        /// <returns>Coeff of determination</returns>
+        double DoFit(double[] x, double[] y);
+
+        /// <summary>
         /// Perform the fit
         /// </summary>
         /// <param name="x">x array</param>
@@ -34,5 +47,11 @@ namespace RICPFitter.Functions
         /// <param name="initialGuess">Initial guess</param>
         /// <returns>Coeff of determination</returns>
         double DoFit(double[] x, double[] y, List<FuncParameter> initialGuess);
+
+        /// <summary>
+        /// Fired when the a fit is performed<br/>
+        /// Arguments ; X, Y data and CoD
+        /// </summary>
+        event Action<double[], double[], double> FitPerformed;
     }
 }

@@ -25,6 +25,11 @@ namespace RICPFitter.Functions
             {
                 Name = node.Attributes["name"].Value
             };
+            string cat = node.Attributes["category"].Value;
+            if (cat != null)
+            {
+                result.Category = cat;
+            }
             List<FuncParameter> parameters = [];
             string variableName = "";
             bool singleVariableFound = false;
@@ -82,6 +87,7 @@ namespace RICPFitter.Functions
             result.GenerateFunction(parameters, variableName, equation);
 
             result.Parameters = parameters;
+            result.GuessParameters = new List<FuncParameter>(parameters);
 
             return result;
         }
@@ -176,7 +182,9 @@ namespace RICPFitter.Functions
                 Parameters[i].Value = (double)rawFitParam[i];
             }
 
-            CoeffOfDetermination = GoodnessOfFit.CoefficientOfDetermination(y, GetY(x));
+            double[] yFit = GetY(x);
+            CoeffOfDetermination = GoodnessOfFit.CoefficientOfDetermination(y, yFit);
+            OnFitPerformed(x, yFit, CoeffOfDetermination);
             return CoeffOfDetermination;
         }
 

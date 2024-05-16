@@ -19,6 +19,11 @@ namespace RICPFitter.Functions
         [Category("1) General")]
         public string Description { get; protected set; } = string.Empty;
 
+        [DisplayName("Category")]
+        [Description("Category")]
+        [Category("1) General")]
+        public string Category { get; set; } = "Other";
+
         [DisplayName("Parameters")]
         [Description("Parameters of the function")]
         [Category("1) General")]
@@ -48,6 +53,23 @@ namespace RICPFitter.Functions
         [Description("Fit max number of iteration (least square method)")]
         [Category("3) Fit")]
         public int FitMaxIteration { get; set; } = 1000;
+
+        [DisplayName("Initial guess")]
+        [Description("Initial guess of fit")]
+        [Category("3) Fit")]
+        public List<FuncParameter> GuessParameters { get; protected set; }
+
+        public event Action<double[], double[], double> FitPerformed;
+        protected void OnFitPerformed(double[] x, double[] y, double cod)
+        {
+            FitPerformed?.Invoke(x, y, cod);
+        }
+
+
+        public virtual double DoFit(double[] x, double[] y)
+        {
+            return DoFit(x, y, GuessParameters);
+        }
 
         public virtual double DoFit(double[] x, double[] y, List<FuncParameter> initialGuess)
         {

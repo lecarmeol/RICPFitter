@@ -22,6 +22,11 @@ namespace RICPFitter.Functions
         string Description { get; }
 
         /// <summary>
+        /// Category of the function (for sorting purpose)
+        /// </summary>
+        string Category { get; }
+
+        /// <summary>
         /// Function parameters
         /// </summary>
         List<FuncParameter> Parameters { get; set; }

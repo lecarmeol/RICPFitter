@@ -1,6 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions>
-  <Function name="gaussian">
+  <Function name="linear" category="polynomial">
+    <Parameter description="slope" defaultValue ="1">a</Parameter>
+    <Parameter description="intercept" defaultValue ="0">b</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * x + b</Equation>
+  </Function>
+  <Function name="quadratic" category="polynomial">
+    <Parameter description="coefficient a" defaultValue ="1">a</Parameter>
+    <Parameter description="coefficient b" defaultValue ="1">b</Parameter>
+    <Parameter description="coefficient c" defaultValue ="0">c</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * x * x + b * x + c</Equation>
+  </Function>
+  <Function name="cubic" category="polynomial">
+    <Parameter description="coefficient a" defaultValue ="1">a</Parameter>
+    <Parameter description="coefficient b" defaultValue ="1">b</Parameter>
+    <Parameter description="coefficient c" defaultValue ="1">c</Parameter>
+    <Parameter description="coefficient d" defaultValue ="0">d</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * x * x * x + b * x * x + c * x + d</Equation>
+  </Function>
+  <Function name="gaussian" category="peak functions">
     <Parameter description="amplitude" defaultValue ="1">A</Parameter>
     <Parameter description="center" defaultValue ="0">x0</Parameter>
     <Parameter description="fwhm" defaultValue ="1">w</Parameter>
@@ -8,7 +29,7 @@
     <Variable>x</Variable>
     <Equation>A * Math.Exp(-(x - x0) * (x - x0) / (2 * w * w)) + y0</Equation>
   </Function>
-  <Function name="lorentzian">
+  <Function name="lorentzian" category="peak functions">
     <Parameter description="amplitude" defaultValue ="1">A</Parameter>
     <Parameter description="center" defaultValue ="0">x0</Parameter>
     <Parameter description="fwhm" defaultValue ="1">w</Parameter>
@@ -16,7 +37,13 @@
     <Variable>x</Variable>
     <Equation>A / (1 + Math.Pow(2 * (x - x0) / w, 2)) + y0</Equation>
   </Function>
-  <Function name="exponential decay">
+  <Function name="exponential" category="exponential functions">
+    <Parameter description="initial value" defaultValue ="1">a</Parameter>
+    <Parameter description="growth rate" defaultValue ="1" unit="s">b</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * Math.Exp(b * x)</Equation>
+  </Function>
+  <Function name="exponential decay" category="exponential functions">
     <Parameter description="amplitude" defaultValue ="1">A</Parameter>
     <Parameter description="lifetime" defaultValue ="1" unit="s">τ</Parameter>
     <Parameter description="offset" defaultValue ="0">y0</Parameter>

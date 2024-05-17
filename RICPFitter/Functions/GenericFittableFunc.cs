@@ -59,10 +59,10 @@ namespace RICPFitter.Functions
         [Category("3) Fit")]
         public List<FuncParameter> GuessParameters { get; protected set; }
 
-        public event Action<double[], double[], double> FitPerformed;
-        protected void OnFitPerformed(double[] x, double[] y, double cod)
+        public event Action<IFittable, double[], double[]> FitPerformed;
+        protected void OnFitPerformed(IFittable function, double[] x, double[] y)
         {
-            FitPerformed?.Invoke(x, y, cod);
+            FitPerformed?.Invoke(function, x, y);
         }
 
 

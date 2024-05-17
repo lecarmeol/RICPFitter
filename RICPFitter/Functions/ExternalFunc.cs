@@ -184,7 +184,7 @@ namespace RICPFitter.Functions
 
             double[] yFit = GetY(x);
             CoeffOfDetermination = GoodnessOfFit.CoefficientOfDetermination(y, yFit);
-            OnFitPerformed(x, yFit, CoeffOfDetermination);
+            OnFitPerformed(this, x, yFit);
             return CoeffOfDetermination;
         }
 

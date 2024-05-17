@@ -49,9 +49,8 @@ namespace RICPFitter.Functions
         double DoFit(double[] x, double[] y, List<FuncParameter> initialGuess);
 
         /// <summary>
-        /// Fired when the a fit is performed<br/>
-        /// Arguments ; X, Y data and CoD
+        /// Fired when the a fit is performed
         /// </summary>
-        event Action<double[], double[], double> FitPerformed;
+        event Action<IFittable, double[], double[]> FitPerformed;
     }
 }

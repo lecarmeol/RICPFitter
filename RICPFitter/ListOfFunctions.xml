@@ -19,7 +19,7 @@
     <Parameter description="coefficient c" defaultValue ="1">c</Parameter>
     <Parameter description="coefficient d" defaultValue ="0">d</Parameter>
     <Variable>x</Variable>
-    <Equation>a * x * x * x + b * x * x + c * x + d</Equation>
+    <Equation>a * Math.Pow(x, 3) + b * x * x + c * x + d</Equation>
   </Function>
   <Function name="gaussian" category="peak functions">
     <Parameter description="amplitude" defaultValue ="1">A</Parameter>
@@ -39,7 +39,7 @@
   </Function>
   <Function name="exponential" category="exponential functions">
     <Parameter description="initial value" defaultValue ="1">a</Parameter>
-    <Parameter description="growth rate" defaultValue ="1" unit="s">b</Parameter>
+    <Parameter description="growth rate" defaultValue ="1">b</Parameter>
     <Variable>x</Variable>
     <Equation>a * Math.Exp(b * x)</Equation>
   </Function>
@@ -50,4 +50,49 @@
     <Variable>t</Variable>
     <Equation>A * Math.Exp(- t / τ) + y0</Equation>
   </Function>
+  <Function name="natural log (ln)" category="logarithmic functions">
+    <Parameter description="scaling factor" defaultValue ="1">a</Parameter>
+    <Parameter description="offset" defaultValue ="0">b</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * Math.Log(x) + b</Equation>
+  </Function>
+  <Function name="power" category="power functions">
+    <Parameter description="scaling factor" defaultValue ="1">a</Parameter>
+    <Parameter description="power (exponent)" defaultValue ="2">b</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * Math.Pow(x, b)</Equation>
+  </Function>
+  <Function name="sigmoid" category="exponential functions">
+    <Parameter description="maximum value" defaultValue ="1">a</Parameter>
+    <Parameter description="steepness of the curve" defaultValue ="1">b</Parameter>
+    <Parameter description="midpoint of the curve" defaultValue ="1">c</Parameter>
+    <Variable>x</Variable>
+    <Equation>a / (1 + Math.Exp(-b * (x - c)))</Equation>
+  </Function>
+  <Function name="hyperbole" category="hyperbolic functions">
+    <Parameter description="scaling factor" defaultValue ="1">a</Parameter>
+    <Parameter description="horizontal shift" defaultValue ="0">b</Parameter>
+    <Parameter description="vertical shift" defaultValue ="0">c</Parameter>
+    <Variable>x</Variable>
+    <Equation>a / (x + b) + c</Equation>
+  </Function>
+  <Function name="sin" category="trigonometric functions">
+    <Parameter description="amplitude" defaultValue ="1">a</Parameter>
+    <Parameter description="frequency" defaultValue ="1">b</Parameter>
+    <Parameter description="phase shift" defaultValue ="0">c</Parameter>
+    <Parameter description="vertical shift" defaultValue ="0">d</Parameter>
+    <Variable>x</Variable>
+    <Equation>a * Math.Sin(b * x + c) + d</Equation>
+  </Function>
+  <!-- Not working yet
+  <Function name="V-shape" category="piecewise functions">
+    <Parameter description="first slope" defaultValue ="1">a1</Parameter>
+    <Parameter description="first intercept" defaultValue ="0">b1</Parameter>
+    <Parameter description="second slope" defaultValue ="1">a2</Parameter>
+    <Parameter description="second intercept" defaultValue ="0">b2</Parameter>
+    <Parameter description="center" defaultValue ="0">c</Parameter>
+    <Variable>x</Variable>
+    <Equation>if(x &lt; c) return a1 * (x - c) + b1; else return a2 * (x - c) + b2 </Equation>
+  </Function>
+  -->
 </Functions>

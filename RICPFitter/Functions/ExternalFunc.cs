@@ -31,9 +31,7 @@ namespace RICPFitter.Functions
                 result.Category = cat;
             }
             List<FuncParameter> parameters = [];
-            string variableName = "";
             bool singleVariableFound = false;
-            string equation = "";
             bool equationFound = false;
             foreach (XmlNode subnode in node.ChildNodes)
             {
@@ -55,7 +53,7 @@ namespace RICPFitter.Functions
                 {
                     if (!singleVariableFound)
                     {
-                        variableName = subnode.InnerText;
+                        result.VariableName = subnode.InnerText;
                         singleVariableFound = true;
                     }
                     else // To much variables
@@ -67,8 +65,7 @@ namespace RICPFitter.Functions
                 {
                     if (!equationFound)
                     {
-                        equation = subnode.InnerText;
-                        result.Description = equation;
+                        result.Description = subnode.InnerText;
                         equationFound = true;
                     }
                     else // To much equation definition
@@ -81,15 +78,42 @@ namespace RICPFitter.Functions
             if (parameters.Count < 1) throw new ArgumentException("A function must contain at least one parameter");
             if (parameters.Count > result.MaxNbOfParameters) throw new ArgumentException($"A function must contain at max {result.MaxNbOfParameters} parameters");
             if (!equationFound) throw new ArgumentException("A function must contain 1 equation");
-            if (!equation.Contains(variableName)) throw new ArgumentException($"Variable {variableName} is not included in the equation {equation}");
+            if (!result.Description.Contains(result.VariableName)) throw new ArgumentException($"Variable {result.VariableName} is not included in the equation {result.Description}");
 
             
-            result.GenerateFunction(parameters, variableName, equation);
+            result.GenerateFunction(parameters, result.VariableName, result.Description);
 
             result.Parameters = parameters;
             result.GuessParameters = new List<FuncParameter>(parameters);
 
             return result;
+        }
+
+        public void ToXml(XmlNode parentNode)
+        {
+            XmlElement funcNode = parentNode.OwnerDocument.CreateElement("Function");
+            funcNode.SetAttribute("name", Name);
+            funcNode.SetAttribute("category", Category);
+            foreach (FuncParameter parameter in Parameters)
+            {
+                XmlElement paramNode = funcNode.OwnerDocument.CreateElement("Parameter");
+                paramNode.SetAttribute("description", parameter.Description);
+                paramNode.SetAttribute("defaultValue", parameter.Value.ToString().Replace(',','.'));
+                if (parameter.Unit != null)
+                {
+                    paramNode.SetAttribute("unit", parameter.Unit);
+                }
+                paramNode.InnerText = parameter.Name;
+                funcNode.AppendChild(paramNode);
+            }
+            XmlElement variableNode = funcNode.OwnerDocument.CreateElement("Variable");
+            variableNode.InnerText = VariableName;
+            funcNode.AppendChild(variableNode);
+            XmlElement equationNode = funcNode.OwnerDocument.CreateElement("Equation");
+            equationNode.InnerText = Description;
+            funcNode.AppendChild(equationNode);
+
+            parentNode.AppendChild(funcNode);
         }
 
         /// <summary>

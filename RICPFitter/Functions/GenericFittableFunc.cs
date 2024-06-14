@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.Statistics;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -23,6 +25,11 @@ namespace RICPFitter.Functions
         [Description("Category")]
         [Category("1) General")]
         public string Category { get; set; } = "Other";
+
+        [DisplayName("Variable")]
+        [Description("Variable name")]
+        [Category("1) General")]
+        public string VariableName { get; protected set; } = "x";
 
         [DisplayName("Parameters")]
         [Description("Parameters of the function")]
@@ -110,7 +117,14 @@ namespace RICPFitter.Functions
         protected void AddRandomness(ref double[] yData)
         {
             Random random = new();
-            double yMax = yData.Max();
+
+            List<double> filteredY = [];
+            for (int i = 0;i < yData.Length; i++)
+            {
+                if (yData[i].IsFinite()) filteredY.Add(yData[i]);
+            }
+
+            double yMax = filteredY.Max();
             for (int i = 0; i < yData.Length; i++)
             {
                 double randomVariation = yMax * RandomnessStrength / 100 * random.NextDouble();

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RICPFitter.Functions
 {
@@ -25,6 +22,11 @@ namespace RICPFitter.Functions
         /// Category of the function (for sorting purpose)
         /// </summary>
         string Category { get; }
+
+        /// <summary>
+        /// Name of the variable
+        /// </summary>
+        string VariableName { get; }
 
         /// <summary>
         /// Function parameters

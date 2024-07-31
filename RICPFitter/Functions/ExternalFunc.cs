@@ -79,12 +79,16 @@ namespace RICPFitter.Functions
             if (parameters.Count > result.MaxNbOfParameters) throw new ArgumentException($"A function must contain at max {result.MaxNbOfParameters} parameters");
             if (!equationFound) throw new ArgumentException("A function must contain 1 equation");
             if (!result.Description.Contains(result.VariableName)) throw new ArgumentException($"Variable {result.VariableName} is not included in the equation {result.Description}");
-
             
             result.GenerateFunction(parameters, result.VariableName, result.Description);
 
             result.Parameters = parameters;
             result.GuessParameters = new List<FuncParameter>(parameters);
+
+            //if (!Checking.EquationChecker.IsEquationValid(result.Description, result.VariableName, result.Parameters, out string checkErrorMsg))
+            //{
+            //    throw new Exception(checkErrorMsg);
+            //}
 
             return result;
         }

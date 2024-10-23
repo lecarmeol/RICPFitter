@@ -22,7 +22,7 @@ namespace RICPFitter.Functions
                 return A * Math.Exp(-(x - x0) * (x - x0) / (2 * w * w)) + y0;
             });
             Name = "Gaussian";
-            Description = "A * Exp(-(x - x0)² / (2 * w²)) + y0";
+            Equation = "A * Exp(-(x - x0)² / (2 * w²)) + y0";
             Parameters = [];
             FuncParameter amplitude = new()
             {

@@ -18,7 +18,7 @@ namespace RICPFitter.Functions
                 return A * Math.Exp(- t / τ) + y0;
             });
             Name = "Exponantial decay";
-            Description = "A * Exp(- t / τ) + y0";
+            Equation = "A * Exp(- t / τ) + y0";
             Parameters = [];
             FuncParameter amplitude = new()
             {

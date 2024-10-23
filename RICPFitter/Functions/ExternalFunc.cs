@@ -19,6 +19,7 @@ namespace RICPFitter.Functions
 
         public ExternalFunc() { }
 
+
         public static ExternalFunc FromXml(XmlNode node)
         {
             ExternalFunc result = new()
@@ -65,7 +66,7 @@ namespace RICPFitter.Functions
                 {
                     if (!equationFound)
                     {
-                        result.Description = subnode.InnerText;
+                        result.Equation = subnode.InnerText;
                         equationFound = true;
                     }
                     else // To much equation definition
@@ -78,9 +79,9 @@ namespace RICPFitter.Functions
             if (parameters.Count < 1) throw new ArgumentException("A function must contain at least one parameter");
             if (parameters.Count > result.MaxNbOfParameters) throw new ArgumentException($"A function must contain at max {result.MaxNbOfParameters} parameters");
             if (!equationFound) throw new ArgumentException("A function must contain 1 equation");
-            if (!result.Description.Contains(result.VariableName)) throw new ArgumentException($"Variable {result.VariableName} is not included in the equation {result.Description}");
+            if (!result.Equation.Contains(result.VariableName)) throw new ArgumentException($"Variable {result.VariableName} is not included in the equation {result.Equation}");
             
-            result.GenerateFunction(parameters, result.VariableName, result.Description);
+            result.GenerateFunction(parameters, result.VariableName, result.Equation);
 
             result.Parameters = parameters;
             result.GuessParameters = new List<FuncParameter>(parameters);
@@ -114,10 +115,24 @@ namespace RICPFitter.Functions
             variableNode.InnerText = VariableName;
             funcNode.AppendChild(variableNode);
             XmlElement equationNode = funcNode.OwnerDocument.CreateElement("Equation");
-            equationNode.InnerText = Description;
+            equationNode.InnerText = Equation;
             funcNode.AppendChild(equationNode);
 
             parentNode.AppendChild(funcNode);
+        }
+
+        public static ExternalFunc FromStrings(string equation, string variable, List<FuncParameter> parameters, string name, string category = null)
+        {
+            ExternalFunc result = new()
+            {
+                Name = name,
+                Category = category,
+                Parameters = parameters,
+                VariableName = variable,
+                Equation = equation
+            };
+            result.GenerateFunction(parameters, variable, equation);
+            return result;
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace RICPFitter.Functions
         [DisplayName("Formula")]
         [Description("Formula")]
         [Category("1) General")]
-        public string Description { get; protected set; } = string.Empty;
+        public string Equation { get; protected set; } = string.Empty;
 
         [DisplayName("Category")]
         [Description("Category")]

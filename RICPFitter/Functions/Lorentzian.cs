@@ -15,7 +15,7 @@ namespace RICPFitter.Functions
                 return A / (1 + Math.Pow(2 * (x - x0) / w, 2)) + y0;
             });
             Name = "Lorentzian";
-            Description = "A / (1 + (2 * (x-x0) / w)²) + y0";
+            Equation = "A / (1 + (2 * (x-x0) / w)²) + y0";
         }
     }
 }

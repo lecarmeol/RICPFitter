@@ -16,7 +16,7 @@ namespace RICPFitter.Functions
         /// <summary>
         /// Description e.g. formula
         /// </summary>
-        string Description { get; }
+        string Equation { get; }
 
         /// <summary>
         /// Category of the function (for sorting purpose)
